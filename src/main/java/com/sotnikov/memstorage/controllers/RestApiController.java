@@ -3,6 +3,7 @@ package com.sotnikov.memstorage.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,23 +17,33 @@ import com.sotnikov.memstorage.repositories.TagRepository;
 
 
 
-@RestController
+@Controller
 public class RestApiController {
 
 	@Autowired
 	TagRepository tagRepository;
 	
-	 @PostMapping("/add_tag")
-	 public Tag newTag(Tag newTag) {
+	 @PostMapping("/tag/add")
+	 public String sendNewTag(Tag newTag) {
 		 
-	    return tagRepository.save(newTag);
+		 tagRepository.save(newTag);
+	    return "add_tag";
+	    
+	  }
+	 
+	 @GetMapping("/tag/add")
+	 public String swowForm(Tag newTag) {
+		 
+	    return "add_tag";
 	    
 	  }
 	 
 	 @GetMapping("/tags") 
-	 public List<Tag> showAllTags() {
+	 public String showAllTags(Model model) {
 		 
-		 return (List<Tag>) tagRepository.findAll();
+		 model.addAttribute("tags", tagRepository.findAll());
+		 
+		 return "all_tags";
 		 
 	 }
 	 
