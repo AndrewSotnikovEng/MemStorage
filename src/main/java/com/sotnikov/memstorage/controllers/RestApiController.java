@@ -23,20 +23,22 @@ public class RestApiController {
 	@Autowired
 	TagRepository tagRepository;
 	
+	 @GetMapping("/tag/add")
+	 public String showNewTag(Tag newTag) {
+		 
+	    return "add_tag";
+	    
+	  }
+	
+	
 	 @PostMapping("/tag/add")
 	 public String sendNewTag(Tag newTag) {
 		 
 		 tagRepository.save(newTag);
-	    return "add_tag";
+	    return "redirect:/tags";
 	    
 	  }
 	 
-	 @GetMapping("/tag/add")
-	 public String swowForm(Tag newTag) {
-		 
-	    return "add_tag";
-	    
-	  }
 	 
 	 @GetMapping("/tags") 
 	 public String showAllTags(Model model) {
@@ -47,17 +49,25 @@ public class RestApiController {
 		 
 	 }
 	 
+	 @GetMapping("/edit/tag/{id}")
+	 public String showUpdateForm(@PathVariable("id") long id, Model model) {
+	     Tag tag = tagRepository.findById(id)
+	       .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+	     
+	     model.addAttribute("tag", tag);
+	     return "update_tag";
+	 }
 	 
-	 @PostMapping("/update/{id}")
+	 @PostMapping("/update/tag/{id}")
 		public String updateTag(@PathVariable("id") long id, Tag tag, 
 		  BindingResult result, Model model) {
 		    if (result.hasErrors()) {
 		        tag.setId(id);
-		        return "update-user";
+		        return "update_tag";
 		    }
 		        
 		    tagRepository.save(tag);
-		    return "Updated tag for " + id + " ID";
+		    return "redirect:/tags";
 		}
 		    
 		@GetMapping("/delete/{id}")
@@ -66,7 +76,7 @@ public class RestApiController {
 		      .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 		    tagRepository.delete(tag);
 		    model.addAttribute("users", tagRepository.findAll());
-		    return "Deleted tag for " + id + " ID";
+		    return "redirect:/tags";
 		}
 	
 }
