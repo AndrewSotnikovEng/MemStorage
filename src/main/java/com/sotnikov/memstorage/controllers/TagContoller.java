@@ -3,6 +3,7 @@ package com.sotnikov.memstorage.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,12 +19,12 @@ import com.sotnikov.memstorage.repositories.TagRepository;
 
 
 @Controller
-public class RestApiController {
+public class TagContoller {
 
 	@Autowired
 	TagRepository tagRepository;
 	
-	 @GetMapping("/tag/add")
+	 @GetMapping("/admin/tag/add")
 	 public String showNewTag(Tag newTag) {
 		 
 	    return "add_tag";
@@ -31,7 +32,7 @@ public class RestApiController {
 	  }
 	
 	
-	 @PostMapping("/tag/add")
+	 @PostMapping("/admin/tag/add")
 	 public String sendNewTag(Tag newTag) {
 		 
 		 tagRepository.save(newTag);
@@ -49,7 +50,7 @@ public class RestApiController {
 		 
 	 }
 	 
-	 @GetMapping("/edit/tag/{id}")
+	 @GetMapping("/admin/edit/tag/{id}")
 	 public String showUpdateForm(@PathVariable("id") long id, Model model) {
 	     Tag tag = tagRepository.findById(id)
 	       .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
@@ -58,19 +59,19 @@ public class RestApiController {
 	     return "update_tag";
 	 }
 	 
-	 @PostMapping("/update/tag/{id}")
+	 @PostMapping("/admin/update/tag/{id}")
 		public String updateTag(@PathVariable("id") long id, Tag tag, 
 		  BindingResult result, Model model) {
 		    if (result.hasErrors()) {
 		        tag.setId(id);
 		        return "update_tag";
 		    }
-		        
+
 		    tagRepository.save(tag);
 		    return "redirect:/tags";
 		}
 		    
-		@GetMapping("/delete/{id}")
+		@GetMapping("/admin/delete/{id}")
 		public String deleteUser(@PathVariable("id") long id, Model model) {
 		    Tag tag = tagRepository.findById(id)
 		      .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
