@@ -40,6 +40,14 @@ public class TagContoller {
 	    
 	  }
 	 
+	 @GetMapping("/admin") 
+	 public String showAdminPanel(Model model) {
+		 
+		 
+		 return "admin";
+		 
+	 }
+	 
 	 
 	 @GetMapping("/tags") 
 	 public String showAllTags(Model model) {
